@@ -702,7 +702,7 @@ class PaymentService
 	{
 	    
 	    try {
-		$payments = $this->paymentRepository->getPaymentsByOrderId($order->id);
+		$payment = $this->paymentRepository->getPaymentsByOrderId($order->id);
 		$this->getLogger(__METHOD__)->error('eb', $payments);
 		$paymentRequestData = [
 		    'vendor'         => $this->paymentHelper->getNovalnetConfig('novalnet_vendor_id'),
@@ -740,9 +740,7 @@ class PaymentService
 			$transactionComments = PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('transaction_cancel', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
 		}
 			$this->paymentHelper->updatePayments($tid, $responseData['tid_status'], $order->id);
-		        foreach($payments as $payment) {
 				$this->addPaymentHistoryEntry($payment, $transactionComments);
-			}
 	     } else {
 	           $error = $this->paymentHelper->getNovalnetStatusText($responseData);
 			   $this->getLogger(__METHOD__)->error('Novalnet::doCaptureVoid', $error);
