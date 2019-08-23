@@ -741,9 +741,9 @@ class PaymentService
 		}
 			$this->paymentHelper->updatePayments($tid, $responseData['tid_status'], $order->id);
 		               foreach($payments as $payment) {
-				$created = $this->addPaymentHistoryEntry($payment, 'test');
-				       $this->getLogger(__METHOD__)->error('create', $created);
-		     		$this->paymentRepository->updatePayment($payment);
+				//$created = $this->addPaymentHistoryEntry($payment, 'test');
+				     //  $this->getLogger(__METHOD__)->error('create', $created);
+		     		$this->paymentRepository->updatePayment($created);
 				      $payments = $this->paymentRepository->getPaymentsByOrderId($order->id);
 				       $this->getLogger(__METHOD__)->error('updated', $payments);
 			       }
