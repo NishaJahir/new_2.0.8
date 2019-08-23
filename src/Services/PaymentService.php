@@ -740,13 +740,13 @@ class PaymentService
 			$transactionComments = PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('transaction_cancel', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
 		}
 			$this->paymentHelper->updatePayments($tid, $responseData['tid_status'], $order->id);
-		               foreach($payments as $payment) {
+		              // foreach($payments as $payment) {
 				//$created = $this->addPaymentHistoryEntry($payment, 'test');
 				     //  $this->getLogger(__METHOD__)->error('create', $created);
-		     		$this->paymentRepository->updatePayment($created);
-				      $payments = $this->paymentRepository->getPaymentsByOrderId($order->id);
-				       $this->getLogger(__METHOD__)->error('updated', $payments);
-			       }
+		     		//$this->paymentRepository->updatePayment($created);
+				    //  $payments = $this->paymentRepository->getPaymentsByOrderId($order->id);
+				   //    $this->getLogger(__METHOD__)->error('updated', $payments);
+			      // }
 	     } else {
 	           $error = $this->paymentHelper->getNovalnetStatusText($responseData);
 			   $this->getLogger(__METHOD__)->error('Novalnet::doCaptureVoid', $error);
