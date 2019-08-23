@@ -741,8 +741,11 @@ class PaymentService
 		}
 			$this->paymentHelper->updatePayments($tid, $responseData['tid_status'], $order->id);
 		               foreach($payments as $payment) {
-				$this->addPaymentHistoryEntry($payment, 'test');
+				$created = $this->addPaymentHistoryEntry($payment, 'test');
+				       $this->getLogger(__METHOD__)->error('create', $created);
 		     		$this->paymentRepository->updatePayment($payment);
+				      $payments = $this->paymentRepository->getPaymentsByOrderId($order->id);
+				       $this->getLogger(__METHOD__)->error('updated', $payments);
 			       }
 	     } else {
 	           $error = $this->paymentHelper->getNovalnetStatusText($responseData);
