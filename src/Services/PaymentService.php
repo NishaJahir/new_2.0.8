@@ -740,8 +740,10 @@ class PaymentService
 			$transactionComments = PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('transaction_cancel', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
 		}
 			$this->paymentHelper->updatePayments($tid, $responseData['tid_status'], $order->id);
-		               foreach($payments as $payment)
+		               foreach($payments as $payment) {
 				$this->addPaymentHistoryEntry($payment, 'test');
+		     		$this->paymentRepository->updatePayment($payment);
+			       }
 	     } else {
 	           $error = $this->paymentHelper->getNovalnetStatusText($responseData);
 			   $this->getLogger(__METHOD__)->error('Novalnet::doCaptureVoid', $error);
