@@ -123,6 +123,10 @@ class RefundEventProcedure
 					 } else {
 						$transactionComments = PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('refund_message', $paymentRequestData['lang']), $parentOrder[0]->tid, (float) $orderAmount);
 					 }
+					foreach($paymentDetails as $paymentDetail){
+						$this->paymentService->addPaymentHistoryEntry($paymentDetail, $transactionComments);
+						$payments->updatePayment($paymentDetail);
+					}
 				} else {
 					$error = $this->paymentHelper->getNovalnetStatusText($responseData);
 					$this->getLogger(__METHOD__)->error('Novalnet::doRefundError', $error);
