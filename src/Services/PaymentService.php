@@ -29,7 +29,9 @@ use Novalnet\Services\TransactionService;
 use Plenty\Modules\Plugin\DataBase\Contracts\DataBase;
 use Plenty\Modules\Plugin\DataBase\Contracts\Query;
 use Novalnet\Models\TransactionLog;
-
+use Plenty\Modules\Payment\History\Contracts\PaymentHistoryRepositoryContract;
+use Plenty\Modules\Payment\History\Models\PaymentHistory as PaymentHistoryModel;
+use use Plenty\Modules\Payment\Contracts\PaymentRepositoryContract;
 /**
  * Class PaymentService
  *
@@ -40,6 +42,16 @@ class PaymentService
 
     use Loggable;
     
+    /**
+     * @var PaymentHistoryRepositoryContract
+     */
+    private $paymentHistoryRepo;
+	
+   /**
+     * @var PaymentRepositoryContract
+     */
+    private $paymentRepository;
+
     /**
      * @var ConfigRepository
      */
@@ -94,6 +106,8 @@ class PaymentService
                                 CountryRepositoryContract $countryRepository,
                                 WebstoreHelper $webstoreHelper,
                                 PaymentHelper $paymentHelper,
+				PaymentHistoryRepositoryContract $paymentHistoryRepo,
+				PaymentRepositoryContract $paymentRepository,
                                 TransactionService $transactionLogData)
     {
         $this->config                   = $config;
@@ -101,6 +115,8 @@ class PaymentService
         $this->addressRepository        = $addressRepository;
         $this->countryRepository        = $countryRepository;
         $this->webstoreHelper           = $webstoreHelper;
+	$this->paymentHistoryRepo = $paymentHistoryRepo;
+	$this->paymentRepository = $paymentRepository;
         $this->paymentHelper            = $paymentHelper;  
         $this->transactionLogData       = $transactionLogData;
     }
@@ -684,7 +700,9 @@ class PaymentService
 	 */
 	public function doCaptureVoid($order, $paymentDetails, $tid, $key, $capture=false) 
 	{
+	    
 	    try {
+		$payments = $this->paymentRepository->getPaymentsByOrderId($order->id);
 		$paymentRequestData = [
 		    'vendor'         => $this->paymentHelper->getNovalnetConfig('novalnet_vendor_id'),
 		    'auth_code'      => $this->paymentHelper->getNovalnetConfig('novalnet_auth_code'),
@@ -721,6 +739,9 @@ class PaymentService
 			$transactionComments = PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('transaction_cancel', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
 		}
 			$this->paymentHelper->updatePayments($tid, $responseData['tid_status'], $order->id);
+		        foreach($payments as $payment) {
+				$this->addPaymentHistoryEntry($payment, $transactionComments);
+			}
 	     } else {
 	           $error = $this->paymentHelper->getNovalnetStatusText($responseData);
 			   $this->getLogger(__METHOD__)->error('Novalnet::doCaptureVoid', $error);
@@ -818,5 +839,25 @@ class PaymentService
 		return $transaction_details;
 		}
 	}
+	
+	/**
+     * @param Payment $payment
+     * @param string $text
+     *
+     * @return PaymentHistoryModel
+     */
+    public function addPaymentHistoryEntry($payment, $text)
+    { 
+	 $this->getLogger(__METHOD__)->error('addEntry', $payment);    
+        /** @var PaymentHistoryModel $paymentHistoryEntry */
+        $paymentHistoryEntry = pluginApp(PaymentHistoryModel::class);
+        $paymentHistoryEntry->typeId = PaymentHistoryModel::HISTORY_TYPE_STATUS_UPDATED;
+        $paymentHistoryEntry->paymentId = $payment->id;
+        $paymentHistoryEntry->value = $text;
+
+        $this->getLogger(__METHOD__)->error('PaymentHistory.addEntry', $paymentHistoryEntry);
+
+        return $this->paymentHistoryRepo->createHistory($paymentHistoryEntry);
+    }
 	
 }
