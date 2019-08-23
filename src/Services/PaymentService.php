@@ -703,7 +703,7 @@ class PaymentService
 	    
 	    try {
 		$payments = $this->paymentRepository->getPaymentsByOrderId($order->id);
-		$this->getLogger(__METHOD__)->error('payment', $payments);
+		$this->getLogger(__METHOD__)->debug('tttttttt', $payments);
 		$paymentRequestData = [
 		    'vendor'         => $this->paymentHelper->getNovalnetConfig('novalnet_vendor_id'),
 		    'auth_code'      => $this->paymentHelper->getNovalnetConfig('novalnet_auth_code'),
