@@ -734,7 +734,7 @@ class PaymentService
 			$paymentData['mop']         = $paymentDetails[0]->mopId;
 			//}
 		       if($responseData['tid_status'] == '100') {
-	               $transactionComments .= PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('transaction_confirmation', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
+	               $transactionComments = PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('transaction_confirmation', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
 		} else {
 			$transactionComments = PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('transaction_cancel', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
 		}
