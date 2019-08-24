@@ -743,7 +743,7 @@ class PaymentService
 		     }
 		     $paymentData['booking_text'] = 'tid:' .$paymentData['tid'] . ' ' . 'text:' . $transactionComments;  
 		     $this->paymentHelper->createPlentyPayment($paymentData);
-		     $this->paymentHelper->updatePayments($tid, $responseData['tid_status'], $order->id);
+		     $this->paymentHelper->updatePayments($tid, $responseData['tid_status'], $order->id, $paymentData['booking_text']);
 		              // foreach($payments as $payment) {
 				//$created = $this->addPaymentHistoryEntry($payment, 'test');
 				     //  $this->getLogger(__METHOD__)->error('create', $created);
