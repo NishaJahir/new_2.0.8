@@ -739,7 +739,9 @@ class PaymentService
 		} else {
 			$transactionComments = PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('transaction_cancel', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
 		}
-			$this->paymentHelper->updatePayments($tid, $responseData['tid_status'], $order->id);
+			
+		     
+		     $this->paymentHelper->updatePayments($tid, $responseData['tid_status'], $order->id);
 		              // foreach($payments as $payment) {
 				//$created = $this->addPaymentHistoryEntry($payment, 'test');
 				     //  $this->getLogger(__METHOD__)->error('create', $created);
