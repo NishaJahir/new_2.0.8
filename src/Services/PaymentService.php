@@ -730,6 +730,7 @@ class PaymentService
 			$paymentData['paid_amount'] = (float) $order->amounts[0]->invoiceTotal;
 			$paymentData['tid']         = $tid;
 			$paymentData['order_no']    = $order->id;
+		        $paymentData['type']    = $responseData['tid_status'] != '100' ? 'cancel' : 'credit';
 			$paymentData['mop']         = $paymentDetails[0]->mopId;
 			//}
 		       if($responseData['tid_status'] == '100') {
