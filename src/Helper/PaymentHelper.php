@@ -187,6 +187,11 @@ class PaymentHelper
         $payment->status          = $requestData['type'] == 'cancel' ? Payment::STATUS_CANCELED : Payment::STATUS_CAPTURED;
         $payment->currency        = $requestData['currency'];
         $payment->amount          = $requestData['paid_amount'];
+        if(isset($requestData['booking_text']) && !empty($requestData['booking_text'])) {
+        $bookingText = $requestData['booking_text'];
+        } else {
+        $bookingText = $requestData['tid'];
+        }
         $transactionId = $requestData['tid'];
         if(!empty($requestData['type']) && $requestData['type'] == 'debit')
         {
@@ -206,7 +211,7 @@ class PaymentHelper
            
         $invoiceDetails = json_encode($invoicePrepaymentDetails);
         $paymentProperty     = [];
-        $paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_BOOKING_TEXT, $transactionId);
+        $paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_BOOKING_TEXT, $bookingText);
         $paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_TRANSACTION_ID, $transactionId);
         $paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_ORIGIN, Payment::ORIGIN_PLUGIN);
         $paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_EXTERNAL_TRANSACTION_STATUS, $requestData['tid_status']);
