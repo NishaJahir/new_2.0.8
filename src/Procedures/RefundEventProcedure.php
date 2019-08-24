@@ -123,7 +123,7 @@ class RefundEventProcedure
 					 } else {
 						$transactionComments = PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('refund_message', $paymentRequestData['lang']), $parentOrder[0]->tid, (float) $orderAmount);
 					 }
-					$paymentData['tid'] = 'tid:' .$paymentData['tid'] . ' ' . 'text:' . $transactionComments;  
+					$paymentData['booking_text'] = 'tid:' .$paymentData['tid'] . ' ' . 'text:' . $transactionComments;  
 					$this->paymentHelper->createPlentyPayment($paymentData);
 					//foreach($paymentDetails as $paymentDetail){
 					//	$this->paymentService->addPaymentHistoryEntry($paymentDetail, $transactionComments);
