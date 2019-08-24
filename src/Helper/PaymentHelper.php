@@ -179,9 +179,10 @@ class PaymentHelper
      */
     public function createPlentyPayment($requestData)
     {
+        $this->getLogger(__METHOD__)->error('createplenty', $requestData);
         /** @var Payment $payment */
         $payment = pluginApp(\Plenty\Modules\Payment\Models\Payment::class);
-
+        
         $payment->mopId           = (int) $requestData['mop'];
         $payment->transactionType = Payment::TRANSACTION_TYPE_BOOKED_POSTING;
         $payment->status          = $requestData['type'] == 'cancel' ? Payment::STATUS_CANCELED : Payment::STATUS_CAPTURED;
