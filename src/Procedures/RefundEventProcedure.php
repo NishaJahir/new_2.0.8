@@ -117,14 +117,14 @@ class RefundEventProcedure
 					$paymentData['type']        = 'debit';
 					$paymentData['mop']         = $paymentDetails[0]->mopId;
 
-					$this->paymentHelper->createPlentyPayment($paymentData);
+					
 					if (!empty($responseData['tid'])) {
 						$transactionComments = PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('refund_message_new_tid', $paymentRequestData['lang']), $parentOrder[0]->tid, (float) $orderAmount, $responseData['tid']);
 					 } else {
 						$transactionComments = PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('refund_message', $paymentRequestData['lang']), $parentOrder[0]->tid, (float) $orderAmount);
 					 }
-					$tid = 'tid:' .$tid . ' ' . 'text:' . $transactionComments;  
-					$this->paymentHelper->updatePayments($tid, $responseData['tid_status'], $order->id);
+					$paymentData['tid'] = 'tid:' .$paymentData['tid'] . ' ' . 'text:' . $transactionComments;  
+					$this->paymentHelper->createPlentyPayment($paymentData);
 					//foreach($paymentDetails as $paymentDetail){
 					//	$this->paymentService->addPaymentHistoryEntry($paymentDetail, $transactionComments);
 					//	$payments->updatePayment($paymentDetail);
