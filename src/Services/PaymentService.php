@@ -702,8 +702,6 @@ class PaymentService
 	{
 	    
 	    try {
-		$payments = $this->paymentRepository->getPaymentsByOrderId($order->id);
-		$this->getLogger(__METHOD__)->debug('tttttttt', $payments);
 		$paymentRequestData = [
 		    'vendor'         => $this->paymentHelper->getNovalnetConfig('novalnet_vendor_id'),
 		    'auth_code'      => $this->paymentHelper->getNovalnetConfig('novalnet_auth_code'),
@@ -725,14 +723,13 @@ class PaymentService
 	     $response = $this->paymentHelper->executeCurl($paymentRequestData, NovalnetConstants::PAYPORT_URL);
 	     $responseData =$this->paymentHelper->convertStringToArray($response['response'], '&');
 	     if ($responseData['status'] == '100') {
-			//if (in_array($key, ['6', '34', '37', '40', '41'])) {
 			$paymentData['currency']    = $paymentDetails[0]->currency;
 			$paymentData['paid_amount'] = (float) $order->amounts[0]->invoiceTotal;
 			$paymentData['tid']         = $tid;
 			$paymentData['order_no']    = $order->id;
 		        $paymentData['type']        = $responseData['tid_status'] != '100' ? 'cancel' : 'credit';
 			$paymentData['mop']         = $paymentDetails[0]->mopId;
-			//}
+			
 		       if($responseData['tid_status'] == '100') {
 	               $transactionComments = PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('transaction_confirmation', $paymentRequestData['lang']), date('d.m.Y'), date('H:i:s'));
 		} else {
@@ -742,16 +739,8 @@ class PaymentService
 		     $paymentData['paid_amount'] = 0;
 		     }
 		     $paymentData['booking_text'] = 'tid:' .$paymentData['tid'] . ' ' . 'text:' . $transactionComments;  
-		     
-		     $this->paymentHelper->updatePayments($tid, $responseData['tid_status'], $order->id, '');
+		     $this->paymentHelper->updatePayments($tid, $responseData['tid_status'], $order->id);
 		     $this->paymentHelper->createPlentyPayment($paymentData);
-		     // foreach($payments as $payment) {
-				//$created = $this->addPaymentHistoryEntry($payment, 'test');
-				     //  $this->getLogger(__METHOD__)->error('create', $created);
-		     		//$this->paymentRepository->updatePayment($created);
-				    //  $payments = $this->paymentRepository->getPaymentsByOrderId($order->id);
-				   //    $this->getLogger(__METHOD__)->error('updated', $payments);
-			      // }
 	     } else {
 	           $error = $this->paymentHelper->getNovalnetStatusText($responseData);
 			   $this->getLogger(__METHOD__)->error('Novalnet::doCaptureVoid', $error);
@@ -849,25 +838,6 @@ class PaymentService
 		return $transaction_details;
 		}
 	}
-	
-	/**
-     * @param Payment $payment
-     * @param string $text
-     *
-     * @return PaymentHistoryModel
-     */
-    public function addPaymentHistoryEntry($payment, $text)
-    { 
-	 $this->getLogger(__METHOD__)->error('addEntry', $payment);    
-        /** @var PaymentHistoryModel $paymentHistoryEntry */
-        $paymentHistoryEntry = pluginApp(PaymentHistoryModel::class);
-        $paymentHistoryEntry->typeId = PaymentHistoryModel::HISTORY_TYPE_STATUS_UPDATED;
-        $paymentHistoryEntry->paymentId = $payment->id;
-        $paymentHistoryEntry->value = $text;
 
-        $this->getLogger(__METHOD__)->error('PaymentHistory.addEntry', $paymentHistoryEntry);
-
-        return $this->paymentHistoryRepo->createHistory($paymentHistoryEntry);
-    }
 	
 }
