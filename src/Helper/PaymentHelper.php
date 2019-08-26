@@ -615,10 +615,11 @@ class PaymentHelper
      * @return null
      */
     public function updatePayments($tid, $tid_status, $orderId)
-    {     
+    {    
+        $payments = $this->paymentRepository->getPaymentsByOrderId($orderId);
         foreach ($payments as $payment) {
         $paymentProperty     = [];
-        $paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_BOOKING_TEXT, $bookingText);
+        $paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_BOOKING_TEXT, $tid);
         $paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_TRANSACTION_ID, $tid);
         $paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_ORIGIN, Payment::ORIGIN_PLUGIN);
         $paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_EXTERNAL_TRANSACTION_STATUS, $tid_status);
