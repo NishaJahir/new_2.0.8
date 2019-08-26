@@ -189,7 +189,6 @@ class PaymentHelper
         $payment->status          = ($requestData['type'] == 'confirmed' ? Payment::STATUS_APPROVED : ($requestData['type'] == 'cancel' ? Payment::STATUS_CANCELED : Payment::STATUS_CAPTURED));
         $payment->currency        = $requestData['currency'];
         $payment->amount          = $requestData['paid_amount'];
-        $payment->customerId          = $requestData['customer_no'];
         if(isset($requestData['booking_text']) && !empty($requestData['booking_text'])) {
         $bookingText = $requestData['booking_text'];
         } else {
