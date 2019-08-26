@@ -614,11 +614,8 @@ class PaymentHelper
      * @param int $orderId
      * @return null
      */
-    public function updatePayments($tid, $tid_status, $orderId, $booking_text)
+    public function updatePayments($tid, $tid_status, $orderId)
     {     
-        $bookingText = !empty($booking_text) ? $booking_text : $tid; 
-        $payments = $this->paymentRepository->getPaymentsByOrderId($orderId);
-        
         foreach ($payments as $payment) {
         $paymentProperty     = [];
         $paymentProperty[]   = $this->getPaymentProperty(PaymentProperty::TYPE_BOOKING_TEXT, $bookingText);
