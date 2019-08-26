@@ -392,7 +392,7 @@ class NovalnetServiceProvider extends ServiceProvider
 		}
 		$paymentKey = $paymentHelper->getPaymentKeyByMop($payments[0]->mopId);
 		preg_match('#\((.*?)\)#', NovalnetConstants::PLUGIN_VERSION, $match);
-		if ($paymentKey == 'NOVALNET_INVOICE', $match[1] >= '2.0.8') {
+		if ($paymentKey == 'NOVALNET_INVOICE' && $match[1] >= '2.0.8') {
 		try {
 			    	$db_details = $paymentService->getDatabaseValues($order->id);
 				$bank_details = array_merge($db_details, json_decode($invoiceDetails, true));
