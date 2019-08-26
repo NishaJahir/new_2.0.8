@@ -124,11 +124,8 @@ class RefundEventProcedure
 						$transactionComments = PHP_EOL . sprintf($this->paymentHelper->getTranslatedText('refund_message', $paymentRequestData['lang']), $parentOrder[0]->tid, (float) $orderAmount);
 					 }
 					$paymentData['booking_text'] = 'tid:' .$paymentData['tid'] . ' ' . 'text:' . $transactionComments;  
+					$this->paymentHelper->updatePayments($tid, $responseData['tid_status'], $order->id);
 					$this->paymentHelper->createPlentyPayment($paymentData);
-					//foreach($paymentDetails as $paymentDetail){
-					//	$this->paymentService->addPaymentHistoryEntry($paymentDetail, $transactionComments);
-					//	$payments->updatePayment($paymentDetail);
-					//}
 				} else {
 					$error = $this->paymentHelper->getNovalnetStatusText($responseData);
 					$this->getLogger(__METHOD__)->error('Novalnet::doRefundError', $error);
