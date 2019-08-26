@@ -391,10 +391,12 @@ class NovalnetServiceProvider extends ServiceProvider
 			}
 		}
 		$paymentKey = $paymentHelper->getPaymentKeyByMop($payments[0]->mopId);
-		preg_match('#\((.*?)\)#', NovalnetConstants::PLUGIN_VERSION, $match);
+		$db_details = $paymentService->getDatabaseValues($order->id);
+		$this->getLogger(__METHOD__)->error('plugin', $db_details);
+		$this->getLogger(__METHOD__)->error('plugin version', $db_details['plugin_version']);
+		preg_match('#\((.*?)\)#', $db_details['plugin_version'], $match);
 		if ($paymentKey == 'NOVALNET_INVOICE' && $match[1] >= '2.0.8') {
 		try {
-			    	$db_details = $paymentService->getDatabaseValues($order->id);
 				$bank_details = array_merge($db_details, json_decode($invoiceDetails, true));
 				$comments = '';
 				$comments .= PHP_EOL . $paymentHelper->getTranslatedText('nn_tid') . $db_details['tid'];
