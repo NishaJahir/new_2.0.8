@@ -294,7 +294,7 @@ class CallbackController extends Controller
 				$transactionStatus = $this->payment_details($nnTransactionHistory->orderNo);
 				$callbackComments = '</br>' . sprintf($this->paymentHelper->getTranslatedText('callback_transaction_cancellation',$orderLanguage),date('d.m.Y'), date('H:i:s'));
 				$this->paymentHelper->updateOrderStatus($nnTransactionHistory->orderNo, (float) $this->config->get('Novalnet.novalnet_order_cancel_status'));
-                $this->paymentHelper->updatePayments($this->aryCaptureParams['tid'], $this->aryCaptureParams['tid_status'], $nnTransactionHistory->orderNo, '');
+                $this->paymentHelper->updatePayments($this->aryCaptureParams['tid'], $this->aryCaptureParams['tid_status'], $nnTransactionHistory->orderNo);
 				return $this->renderTemplate($callbackComments);
 			}
 			if($this->getPaymentTypeLevel() == 2 && $this->aryCaptureParams['tid_status'] == '100')
