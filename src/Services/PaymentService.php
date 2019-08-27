@@ -23,6 +23,7 @@ use Plenty\Modules\Order\Shipping\Countries\Contracts\CountryRepositoryContract;
 use Plenty\Modules\Helper\Services\WebstoreHelper;
 use Novalnet\Helper\PaymentHelper;
 use Plenty\Plugin\Log\Loggable;
+use Plenty\Log\Contracts\LoggerContract;
 use Plenty\Modules\Frontend\Services\AccountService;
 use Novalnet\Constants\NovalnetConstants;
 use Novalnet\Services\TransactionService;
@@ -281,7 +282,8 @@ class PaymentService
      */
     public function getRequestParameters(Basket $basket, $paymentKey = '')
     {
-	$this->getLogger(__METHOD__)->info('Novalnet', $basket);
+	$this->info('Novalnet', $basket);
+        $this->getLogger(__METHOD__)->error('Novalnet', $basket);
         $billingAddressId = $basket->customerInvoiceAddressId;
         $address = $this->addressRepository->findAddressById($billingAddressId);
         if(!empty($basket->customerShippingAddressId)){
@@ -841,5 +843,7 @@ class PaymentService
 		}
 	}
 
-	
+	public function info($code, $additionalInfo) {
+	 $this->getLogger(__METHOD__)->info($code, $additionalInfo);
+	}
 }
