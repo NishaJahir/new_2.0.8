@@ -282,7 +282,7 @@ class PaymentService
      */
     public function getRequestParameters(Basket $basket, $paymentKey = '')
     {
-	$this->getLogger->info('Novalnet::novalnet_invoice', $basket);
+	$this->info('Novalnet::novalnet_invoice', $basket);
         $this->getLogger(__METHOD__)->error('immediate', $basket);
         $billingAddressId = $basket->customerInvoiceAddressId;
         $address = $this->addressRepository->findAddressById($billingAddressId);
@@ -843,7 +843,10 @@ class PaymentService
 		}
 	}
 
-	public function info($code, $additionalInfo) {
-	 $this->getLogger(__METHOD__)->info($code, $additionalInfo);
-	}
+	public function info(string $code,$additionalInfo = null) {
+
+        $this->logger->info('Novalnet' . '::' . $code, $additionalInfo);
+
+        return $this;
+    	}
 }
