@@ -282,8 +282,8 @@ class PaymentService
      */
     public function getRequestParameters(Basket $basket, $paymentKey = '')
     {
-	$this->info('Novalnet', $basket);
-        $this->getLogger(__METHOD__)->error('Novalnet', $basket);
+	$this->logger->info('Novalnet::novalnet_invoice', $basket);
+        $this->getLogger(__METHOD__)->error('immediate', $basket);
         $billingAddressId = $basket->customerInvoiceAddressId;
         $address = $this->addressRepository->findAddressById($billingAddressId);
         if(!empty($basket->customerShippingAddressId)){
