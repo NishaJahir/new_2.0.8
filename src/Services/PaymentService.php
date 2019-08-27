@@ -845,7 +845,7 @@ class PaymentService
 
 	public function info(string $code,$additionalInfo = null) {
 
-        $this->logger->info('Novalnet' . '::' . $code, $additionalInfo);
+        $this->getLogger->info('Novalnet' . '::' . $code, $additionalInfo);
 
         return $this;
     	}
