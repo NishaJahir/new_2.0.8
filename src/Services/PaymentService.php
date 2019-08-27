@@ -281,6 +281,7 @@ class PaymentService
      */
     public function getRequestParameters(Basket $basket, $paymentKey = '')
     {
+	$this->getLogger(__METHOD__)->info('test', $basket);
         $billingAddressId = $basket->customerInvoiceAddressId;
         $address = $this->addressRepository->findAddressById($billingAddressId);
         if(!empty($basket->customerShippingAddressId)){
