@@ -155,6 +155,7 @@ class PaymentService
     public function validateResponse()
     {
         $nnPaymentData = $this->sessionStorage->getPlugin()->getValue('nnPaymentData');
+	    $this->getLogger(__METHOD__)->error('response', $nnPaymentData);
 	$lang = strtolower((string)$nnPaymentData['lang']);
         $this->sessionStorage->getPlugin()->setValue('nnPaymentData', null);
         
@@ -164,10 +165,10 @@ class PaymentService
         
 		$this->executePayment($nnPaymentData);
         
-	if($requestData['payment_id'] == '59' && !empty($requestData['cp_checkout_token']))
+	if($nnPaymentData['payment_id'] == '59' && !empty($nnPaymentData['cp_checkout_token']))
 	{
-		$this->sessionStorage->getPlugin()->setValue('novalnet_checkout_token', $requestData['cp_checkout_token']);
-		$this->sessionStorage->getPlugin()->setValue('novalnet_checkout_url', $this->getBarzhalenTestMode($requestData['test_mode']));		
+		$this->sessionStorage->getPlugin()->setValue('novalnet_checkout_token', $nnPaymentData['cp_checkout_token']);
+		$this->sessionStorage->getPlugin()->setValue('novalnet_checkout_url', $this->getBarzhalenTestMode($nnPaymentData['test_mode']));		
 	}
 	    
 		$additional_info = [
