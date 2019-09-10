@@ -379,6 +379,7 @@ class NovalnetServiceProvider extends ServiceProvider
 		$order = $event->getOrder();
 		$document_type = $event->getDocType();
 		$payments = $paymentRepository->getPaymentsByOrderId($order->id);
+		$this->getLogger(__METHOD__)->error('payment1', $payments);
 		foreach ($payments as $payment)
 		{
 			$properties = $payment->properties;
@@ -390,6 +391,7 @@ class NovalnetServiceProvider extends ServiceProvider
 			}
 			}
 		}
+		    $this->getLogger(__METHOD__)->error('payment2', $invoiceDetails);
 		$paymentKey = $paymentHelper->getPaymentKeyByMop($payments[0]->mopId);
 		$db_details = $paymentService->getDatabaseValues($order->id);
 		$this->getLogger(__METHOD__)->error('plugin', $db_details);
@@ -406,7 +408,8 @@ class NovalnetServiceProvider extends ServiceProvider
 				$comments .= PHP_EOL . $paymentService->getInvoicePrepaymentComments($bank_details);
 				$orderPdfGenerationModel = pluginApp(OrderPdfGeneration::class);
 				$orderPdfGenerationModel->advice = $paymentHelper->getTranslatedText('novalnet_details'). PHP_EOL . $comments;
-			    if ($event->getDocType() == Document::INVOICE) {
+		$this->getLogger(__METHOD__)->error('payment3', $orderPdfGenerationModel->advice);	    
+			if ($event->getDocType() == Document::INVOICE) {
 					$event->addOrderPdfGeneration($orderPdfGenerationModel); 
 			    }
 		} catch (\Exception $e) {
